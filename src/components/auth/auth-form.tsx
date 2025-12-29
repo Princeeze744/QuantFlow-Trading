@@ -3,7 +3,18 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Eye, EyeOff, Loader2, Mail, Lock, User } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { 
+  Eye, 
+  EyeOff, 
+  Loader2, 
+  Mail, 
+  Lock, 
+  User, 
+  CheckCircle2,
+  AlertCircle,
+  Sparkles
+} from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { cn } from '@/lib/utils'
 import { SocialAuth } from './social-auth'
@@ -64,55 +75,108 @@ export function AuthForm({ mode }: AuthFormProps) {
     }
   }
 
-  const titles = {
-    login: 'Welcome back',
-    register: 'Create your account',
-    'forgot-password': 'Reset your password',
+  const content = {
+    login: {
+      title: 'Welcome back',
+      subtitle: 'Enter your credentials to access your account',
+      button: 'Sign In',
+      buttonIcon: null,
+    },
+    register: {
+      title: 'Create your account',
+      subtitle: 'Start receiving AI-powered trading signals',
+      button: 'Create Account',
+      buttonIcon: Sparkles,
+    },
+    'forgot-password': {
+      title: 'Reset your password',
+      subtitle: "We'll send you a link to reset your password",
+      button: 'Send Reset Link',
+      buttonIcon: Mail,
+    },
   }
 
-  const subtitles = {
-    login: 'Enter your credentials to access your account',
-    register: 'Start receiving AI-powered trading signals',
-    'forgot-password': 'We\'ll send you a link to reset your password',
-  }
-
-  const buttonTexts = {
-    login: 'Sign In',
-    register: 'Create Account',
-    'forgot-password': 'Send Reset Link',
-  }
+  const { title, subtitle, button, buttonIcon: ButtonIcon } = content[mode]
 
   return (
     <div className="space-y-6">
-      <div className="lg:hidden flex justify-center mb-8">
+      {/* Mobile Logo */}
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="lg:hidden flex justify-center mb-6"
+      >
         <Link href="/" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-profit-pulse flex items-center justify-center">
-            <span className="text-white font-bold text-lg">QF</span>
+          <div className="w-12 h-12 rounded-xl bg-profit-pulse flex items-center justify-center shadow-lg">
+            <span className="text-white font-bold text-xl">QF</span>
           </div>
-          <span className="text-xl font-bold text-clear-signal">Quant Flow</span>
-        </Link>
-      </div>
-
-      <div className="text-center lg:text-left">
-        <h2 className="text-2xl font-bold text-clear-signal mb-2">{titles[mode]}</h2>
-        <p className="text-market-mist">{subtitles[mode]}</p>
-      </div>
-
-      {error && (
-        <div className="p-4 rounded-lg bg-[rgba(var(--color-bear-strike),0.1)] border border-bear-strike/30">
-          <p className="text-sm text-bear-strike">{error}</p>
-        </div>
-      )}
-
-      {success && (
-        <div className="p-4 rounded-lg bg-[rgba(var(--color-profit-pulse),0.1)] border border-profit-pulse/30">
-          <p className="text-sm text-profit-pulse">{success}</p>
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {mode === 'register' && (
           <div>
+            <span className="text-xl font-bold text-clear-signal block leading-tight">Quant Flow</span>
+            <span className="text-[10px] text-profit-pulse font-semibold uppercase tracking-wider">Trading</span>
+          </div>
+        </Link>
+      </motion.div>
+
+      {/* Header */}
+      <motion.div 
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="text-center lg:text-left"
+      >
+        <h2 className="text-2xl sm:text-3xl font-bold text-clear-signal mb-2">{title}</h2>
+        <p className="text-market-mist">{subtitle}</p>
+      </motion.div>
+
+      {/* Error Message */}
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="p-4 rounded-xl bg-bear-strike/10 border border-bear-strike/30"
+          >
+            <div className="flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-bear-strike flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-bear-strike">{error}</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Success Message */}
+      <AnimatePresence>
+        {success && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="p-4 rounded-xl bg-profit-pulse/10 border border-profit-pulse/30"
+          >
+            <div className="flex items-start gap-3">
+              <CheckCircle2 className="w-5 h-5 text-profit-pulse flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-profit-pulse">{success}</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Form */}
+      <motion.form 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        onSubmit={handleSubmit} 
+        className="space-y-4"
+      >
+        {/* Full Name (Register only) */}
+        {mode === 'register' && (
+          <motion.div
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.25 }}
+          >
             <label className="block text-sm font-medium text-market-mist mb-2">Full Name</label>
             <div className="relative">
               <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-distant-data" />
@@ -122,19 +186,18 @@ export function AuthForm({ mode }: AuthFormProps) {
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="John Doe"
                 required
-                className={cn(
-                  "w-full pl-12 pr-4 py-3 rounded-lg",
-                  "bg-panel-edge border border-[rgb(var(--color-border-subtle))]",
-                  "text-clear-signal placeholder:text-distant-data",
-                  "focus:outline-none focus:border-profit-pulse",
-                  "transition-swift"
-                )}
+                className="w-full pl-12 pr-4 py-3.5 rounded-xl text-base bg-panel-edge border border-[rgb(var(--color-border-subtle))] text-clear-signal placeholder:text-distant-data focus:outline-none focus:border-profit-pulse transition-all"
               />
             </div>
-          </div>
+          </motion.div>
         )}
 
-        <div>
+        {/* Email */}
+        <motion.div
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: mode === 'register' ? 0.3 : 0.25 }}
+        >
           <label className="block text-sm font-medium text-market-mist mb-2">Email</label>
           <div className="relative">
             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-distant-data" />
@@ -144,19 +207,18 @@ export function AuthForm({ mode }: AuthFormProps) {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
               required
-              className={cn(
-                "w-full pl-12 pr-4 py-3 rounded-lg",
-                "bg-panel-edge border border-[rgb(var(--color-border-subtle))]",
-                "text-clear-signal placeholder:text-distant-data",
-                "focus:outline-none focus:border-profit-pulse",
-                "transition-swift"
-              )}
+              className="w-full pl-12 pr-4 py-3.5 rounded-xl text-base bg-panel-edge border border-[rgb(var(--color-border-subtle))] text-clear-signal placeholder:text-distant-data focus:outline-none focus:border-profit-pulse transition-all"
             />
           </div>
-        </div>
+        </motion.div>
 
+        {/* Password */}
         {mode !== 'forgot-password' && (
-          <div>
+          <motion.div
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: mode === 'register' ? 0.35 : 0.3 }}
+          >
             <label className="block text-sm font-medium text-market-mist mb-2">Password</label>
             <div className="relative">
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-distant-data" />
@@ -167,69 +229,120 @@ export function AuthForm({ mode }: AuthFormProps) {
                 placeholder="••••••••"
                 required
                 minLength={6}
-                className={cn(
-                  "w-full pl-12 pr-12 py-3 rounded-lg",
-                  "bg-panel-edge border border-[rgb(var(--color-border-subtle))]",
-                  "text-clear-signal placeholder:text-distant-data",
-                  "focus:outline-none focus:border-profit-pulse",
-                  "transition-swift"
-                )}
+                className="w-full pl-12 pr-12 py-3.5 rounded-xl text-base bg-panel-edge border border-[rgb(var(--color-border-subtle))] text-clear-signal placeholder:text-distant-data focus:outline-none focus:border-profit-pulse transition-all"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-distant-data hover:text-market-mist transition-swift"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-distant-data hover:text-market-mist transition-colors p-1"
               >
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
-          </div>
+            {mode === 'register' && (
+              <p className="text-xs text-distant-data mt-2">Must be at least 6 characters</p>
+            )}
+          </motion.div>
         )}
 
+        {/* Forgot Password Link */}
         {mode === 'login' && (
-          <div className="flex justify-end">
-            <Link href="/forgot-password" className="text-sm text-profit-pulse hover:underline">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.35 }}
+            className="flex justify-end"
+          >
+            <Link 
+              href="/forgot-password" 
+              className="text-sm text-profit-pulse hover:underline transition-colors"
+            >
               Forgot password?
             </Link>
-          </div>
+          </motion.div>
         )}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className={cn(
-            "w-full py-3 px-4 rounded-lg font-semibold",
-            "bg-profit-pulse text-white",
-            "hover:opacity-90 transition-swift",
-            "disabled:opacity-50 disabled:cursor-not-allowed",
-            "flex items-center justify-center gap-2"
-          )}
+        {/* Submit Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
         >
-          {loading && <Loader2 className="w-5 h-5 animate-spin" />}
-          {buttonTexts[mode]}
-        </button>
-      </form>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3.5 px-4 rounded-xl font-semibold text-base bg-profit-pulse text-white hover:bg-profit-pulse/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all shadow-lg shadow-profit-pulse/25"
+          >
+            {loading ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : ButtonIcon ? (
+              <ButtonIcon className="w-5 h-5" />
+            ) : null}
+            {button}
+          </button>
+        </motion.div>
+      </motion.form>
 
-      {mode !== 'forgot-password' && <SocialAuth />}
+      {/* Social Auth */}
+      {mode !== 'forgot-password' && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          <SocialAuth />
+        </motion.div>
+      )}
 
-      <div className="text-center text-sm text-market-mist">
+      {/* Footer Links */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6 }}
+        className="text-center text-sm text-market-mist"
+      >
         {mode === 'login' ? (
           <>
             Don&apos;t have an account?{' '}
-            <Link href="/register" className="text-profit-pulse hover:underline font-medium">Sign up</Link>
+            <Link href="/register" className="text-profit-pulse hover:underline font-semibold">
+              Sign up
+            </Link>
           </>
         ) : mode === 'register' ? (
           <>
             Already have an account?{' '}
-            <Link href="/login" className="text-profit-pulse hover:underline font-medium">Sign in</Link>
+            <Link href="/login" className="text-profit-pulse hover:underline font-semibold">
+              Sign in
+            </Link>
           </>
         ) : (
           <>
             Remember your password?{' '}
-            <Link href="/login" className="text-profit-pulse hover:underline font-medium">Sign in</Link>
+            <Link href="/login" className="text-profit-pulse hover:underline font-semibold">
+              Sign in
+            </Link>
           </>
         )}
-      </div>
+      </motion.div>
+
+      {/* Terms (Register only) */}
+      {mode === 'register' && (
+        <motion.p 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7 }}
+          className="text-center text-xs text-distant-data"
+        >
+          By creating an account, you agree to our{' '}
+          <Link href="/terms" className="text-market-mist hover:text-profit-pulse transition-colors">
+            Terms of Service
+          </Link>{' '}
+          and{' '}
+          <Link href="/privacy" className="text-market-mist hover:text-profit-pulse transition-colors">
+            Privacy Policy
+          </Link>
+        </motion.p>
+      )}
     </div>
   )
 }
