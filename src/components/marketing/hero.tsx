@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { 
   ChevronRight, 
   TrendingUp, 
@@ -10,15 +10,23 @@ import {
   Clock,
   Zap,
   ArrowUpRight,
-  ArrowDownRight
+  ArrowDownRight,
+  Play,
+  CheckCircle2,
+  Sparkles
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { MOTION, EASING } from '@/lib/constants'
 
 const demoSignals = [
-  { asset: 'EUR/USD', direction: 'BUY', entry: '1.0845', tp: '1.0905', status: 'active' },
-  { asset: 'GBP/JPY', direction: 'SELL', entry: '187.50', tp: '186.20', status: 'win' },
-  { asset: 'XAU/USD', direction: 'BUY', entry: '2045.00', tp: '2075.00', status: 'active' },
+  { asset: 'EUR/USD', direction: 'BUY', entry: '1.0845', tp: '1.0905', status: 'active', flag: '🇪🇺' },
+  { asset: 'GBP/JPY', direction: 'SELL', entry: '187.50', tp: '186.20', status: 'win', flag: '🇬🇧' },
+  { asset: 'XAU/USD', direction: 'BUY', entry: '2045.00', tp: '2075.00', status: 'active', flag: '🥇' },
+]
+
+const stats = [
+  { value: '94%', label: 'Win Rate', icon: TrendingUp },
+  { value: '2.5K+', label: 'Traders', icon: Shield },
+  { value: '24/7', label: 'Support', icon: Clock },
 ]
 
 export function Hero() {
@@ -27,114 +35,212 @@ export function Hero() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSignal((prev) => (prev + 1) % demoSignals.length)
-    }, 3000)
+    }, 4000)
     return () => clearInterval(interval)
   }, [])
 
   const signal = demoSignals[currentSignal]
 
+  const primaryBtnClass = cn(
+    "inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl",
+    "bg-gradient-to-r from-profit-pulse to-[rgba(var(--color-profit-pulse),0.85)]",
+    "text-white font-semibold text-lg",
+    "shadow-xl shadow-[rgba(var(--color-profit-pulse),0.3)]",
+    "hover:shadow-[rgba(var(--color-profit-pulse),0.5)]",
+    "transition-all duration-300 active-scale"
+  )
+
+  const secondaryBtnClass = cn(
+    "inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl",
+    "bg-panel-edge text-clear-signal font-semibold text-lg",
+    "border border-[rgb(var(--color-border-subtle))]",
+    "hover:bg-[rgb(var(--color-panel-edge))]",
+    "transition-all duration-300 active-scale"
+  )
+
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden">
+    <section className="relative min-h-screen min-h-[100dvh] flex items-center overflow-hidden pt-16 lg:pt-20">
+      {/* Animated Background */}
       <div className="absolute inset-0 bg-market-depth">
+        {/* Grid Pattern */}
         <div 
           className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage: 'linear-gradient(rgb(var(--color-profit-pulse)) 1px, transparent 1px), linear-gradient(90deg, rgb(var(--color-profit-pulse)) 1px, transparent 1px)',
-            backgroundSize: '50px 50px'
+            backgroundSize: '60px 60px'
           }}
         />
-        <div className="absolute top-1/4 -left-1/4 w-1/2 h-1/2 bg-[rgb(var(--color-profit-pulse))] opacity-10 blur-[150px] rounded-full" />
-        <div className="absolute bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-[rgb(var(--color-data-stream))] opacity-10 blur-[150px] rounded-full" />
+        
+        {/* Animated Gradient Orbs */}
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.2, 1],
+            opacity: [0.1, 0.15, 0.1] 
+          }}
+          transition={{ duration: 8, repeat: Infinity }}
+          className="absolute top-1/4 -left-1/4 w-[600px] h-[600px] bg-[rgb(var(--color-profit-pulse))] rounded-full blur-[150px]" 
+        />
+        <motion.div 
+          animate={{ 
+            scale: [1.2, 1, 1.2],
+            opacity: [0.08, 0.12, 0.08] 
+          }}
+          transition={{ duration: 10, repeat: Infinity }}
+          className="absolute bottom-1/4 -right-1/4 w-[500px] h-[500px] bg-[rgb(var(--color-data-stream))] rounded-full blur-[150px]" 
+        />
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.1, 1],
+            opacity: [0.05, 0.08, 0.05] 
+          }}
+          transition={{ duration: 12, repeat: Infinity }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[rgb(var(--color-golden-edge))] rounded-full blur-[150px]" 
+        />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 lg:py-40">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Left Column - Content */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: MOTION.deliberate / 1000, ease: EASING.out }}
+            transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+            className="text-center lg:text-left"
           >
+            {/* Badge */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: MOTION.smooth / 1000, delay: 0.1 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[rgba(var(--color-profit-pulse),0.1)] border border-[rgba(var(--color-profit-pulse),0.3)] mb-6"
             >
-              <span className="w-2 h-2 rounded-full bg-profit-pulse animate-pulse" />
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-profit-pulse opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-profit-pulse" />
+              </span>
               <span className="text-sm text-profit-pulse font-medium">Live signals every 4 hours</span>
             </motion.div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-clear-signal leading-tight mb-6">
-              The confident <span className="text-gradient-profit">signal</span> in the noise of the markets
-            </h1>
+            {/* Headline */}
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-clear-signal leading-[1.1] mb-6"
+            >
+              The confident{' '}
+              <span className="relative inline-block">
+                <span className="text-gradient-profit">signal</span>
+                <svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 200 8" fill="none">
+                  <motion.path 
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{ duration: 0.8, delay: 0.5 }}
+                    d="M2 6C50 2 150 2 198 6" 
+                    stroke="rgb(var(--color-profit-pulse))" 
+                    strokeWidth="3" 
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </span>{' '}
+              in the noise
+            </motion.h1>
 
-            <p className="text-lg sm:text-xl text-market-mist mb-8 max-w-xl">
+            {/* Subtitle */}
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-lg sm:text-xl text-market-mist mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed"
+            >
               AI-powered trading signals with verified track record. Stop guessing. Start trading with precision.
-            </p>
+            </motion.p>
 
-            <div className="flex flex-col sm:flex-row gap-4 mb-12">
-              <Link
-                href="/register"
-                className={cn(
-                  "inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl",
-                  "bg-profit-pulse text-white font-semibold text-lg",
-                  "hover:opacity-90 transition-swift",
-                  "glow-profit"
-                )}
-              >
-                Get Started Free
-                <ChevronRight className="w-5 h-5" />
-              </Link>
-              <a
-                href="#features"
-                className={cn(
-                  "inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl",
-                  "bg-panel-edge text-clear-signal font-semibold text-lg",
-                  "hover:bg-[rgb(var(--color-border-subtle))] transition-swift",
-                  "border border-[rgb(var(--color-border-subtle))]"
-                )}
-              >
-                See How It Works
-              </a>
-            </div>
+            {/* CTA Buttons */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.25 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-10"
+            >
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Link href="/register" className={primaryBtnClass}>
+                  <Sparkles className="w-5 h-5" />
+                  Get Started Free
+                  <ChevronRight className="w-5 h-5" />
+                </Link>
+              </motion.div>
+              
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <a href="#features" className={secondaryBtnClass}>
+                  <Play className="w-5 h-5" />
+                  See How It Works
+                </a>
+              </motion.div>
+            </motion.div>
 
-            <div className="flex flex-wrap items-center gap-6 text-sm text-market-mist">
-              <div className="flex items-center gap-2">
-                <Shield className="w-5 h-5 text-profit-pulse" />
+            {/* Trust Indicators */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.35 }}
+              className="flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-3"
+            >
+              <motion.div 
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.4 }}
+                className="flex items-center gap-2 text-sm text-market-mist"
+              >
+                <Shield className="w-4 h-4 text-profit-pulse" />
                 <span>Verified Results</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Clock className="w-5 h-5 text-profit-pulse" />
+              </motion.div>
+              <motion.div 
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5 }}
+                className="flex items-center gap-2 text-sm text-market-mist"
+              >
+                <Clock className="w-4 h-4 text-profit-pulse" />
                 <span>Every 4 Hours</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-profit-pulse" />
+              </motion.div>
+              <motion.div 
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.6 }}
+                className="flex items-center gap-2 text-sm text-market-mist"
+              >
+                <Zap className="w-4 h-4 text-profit-pulse" />
                 <span>Instant Alerts</span>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </motion.div>
 
+          {/* Right Column - Signal Card + Floating Stats */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: MOTION.deliberate / 1000, ease: EASING.out, delay: 0.2 }}
-            className="relative"
+            transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1], delay: 0.2 }}
+            className="relative hidden lg:block"
           >
-            <div className="relative z-10">
-              <SignalPreviewCard signal={signal} />
-            </div>
-            <div className="absolute top-4 -right-4 w-full h-full bg-chart-canvas/50 rounded-2xl border border-[rgb(var(--color-border-subtle))] -z-10" />
-            <div className="absolute top-8 -right-8 w-full h-full bg-chart-canvas/30 rounded-2xl border border-[rgb(var(--color-border-subtle))] -z-20" />
-
+            {/* ===== FLOATING WIN RATE CARD (Top Left) ===== */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: MOTION.smooth / 1000 }}
-              className="absolute -bottom-6 -left-6 bg-chart-canvas border border-[rgb(var(--color-border-subtle))] rounded-xl p-4 shadow-xl"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ 
+                opacity: 1, 
+                scale: 1,
+                y: [0, -8, 0],
+              }}
+              transition={{ 
+                opacity: { delay: 0.5, duration: 0.4 },
+                scale: { delay: 0.5, duration: 0.4 },
+                y: { delay: 0.9, duration: 3, repeat: Infinity, ease: "easeInOut" }
+              }}
+              className="absolute -top-4 -left-4 z-30 bg-chart-canvas border border-[rgb(var(--color-border-subtle))] rounded-2xl p-4 shadow-2xl shadow-black/40"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-[rgba(var(--color-profit-pulse),0.15)] flex items-center justify-center">
-                  <TrendingUp className="w-5 h-5 text-profit-pulse" />
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[rgba(var(--color-profit-pulse),0.25)] to-[rgba(var(--color-profit-pulse),0.05)] flex items-center justify-center">
+                  <TrendingUp className="w-6 h-6 text-profit-pulse" />
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-profit-pulse">78.5%</p>
@@ -143,15 +249,24 @@ export function Hero() {
               </div>
             </motion.div>
 
+            {/* ===== FLOATING PIPS CARD (Top Right) ===== */}
             <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: MOTION.smooth / 1000 }}
-              className="absolute -top-6 -right-6 bg-chart-canvas border border-[rgb(var(--color-border-subtle))] rounded-xl p-4 shadow-xl"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ 
+                opacity: 1, 
+                scale: 1,
+                y: [0, -10, 0],
+              }}
+              transition={{ 
+                opacity: { delay: 0.6, duration: 0.4 },
+                scale: { delay: 0.6, duration: 0.4 },
+                y: { delay: 1.2, duration: 3.5, repeat: Infinity, ease: "easeInOut" }
+              }}
+              className="absolute -top-8 -right-8 z-30 bg-chart-canvas border border-[rgb(var(--color-border-subtle))] rounded-2xl p-4 shadow-2xl shadow-black/40"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-[rgba(var(--color-golden-edge),0.15)] flex items-center justify-center">
-                  <Zap className="w-5 h-5 text-golden-edge" />
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[rgba(var(--color-golden-edge),0.25)] to-[rgba(var(--color-golden-edge),0.05)] flex items-center justify-center">
+                  <Zap className="w-6 h-6 text-golden-edge" />
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-golden-edge">+2,450</p>
@@ -159,10 +274,84 @@ export function Hero() {
                 </div>
               </div>
             </motion.div>
+
+            {/* ===== FLOATING TRADERS CARD (Bottom Right) ===== */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ 
+                opacity: 1, 
+                scale: 1,
+                y: [0, -6, 0],
+              }}
+              transition={{ 
+                opacity: { delay: 0.7, duration: 0.4 },
+                scale: { delay: 0.7, duration: 0.4 },
+                y: { delay: 1.5, duration: 2.8, repeat: Infinity, ease: "easeInOut" }
+              }}
+              className="absolute -bottom-4 -right-4 z-30 bg-chart-canvas border border-[rgb(var(--color-border-subtle))] rounded-2xl p-4 shadow-2xl shadow-black/40"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[rgba(var(--color-data-stream),0.25)] to-[rgba(var(--color-data-stream),0.05)] flex items-center justify-center">
+                  <Shield className="w-6 h-6 text-data-stream" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-data-stream">2,547</p>
+                  <p className="text-xs text-market-mist">Active Traders</p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* ===== MAIN SIGNAL CARD ===== */}
+            <div className="relative z-10 mx-8 my-12">
+              <SignalPreviewCard signal={signal} />
+              
+              {/* Stacked Cards Effect */}
+              <div className="absolute top-3 -right-3 w-full h-full bg-chart-canvas/30 rounded-2xl border border-[rgb(var(--color-border-subtle))] -z-10" />
+              <div className="absolute top-6 -right-6 w-full h-full bg-chart-canvas/15 rounded-2xl border border-[rgb(var(--color-border-subtle))] -z-20" />
+            </div>
+
+            {/* Signal Indicator Dots */}
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+              {demoSignals.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentSignal(index)}
+                  className={cn(
+                    "h-2 rounded-full transition-all duration-300",
+                    index === currentSignal 
+                      ? "bg-profit-pulse w-6" 
+                      : "bg-panel-edge hover:bg-market-mist w-2"
+                  )}
+                />
+              ))}
+            </div>
           </motion.div>
         </div>
+
+        {/* Mobile Stats Bar */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="lg:hidden mt-12 grid grid-cols-3 gap-3"
+        >
+          {stats.map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 + index * 0.1 }}
+              className="p-4 rounded-2xl bg-chart-canvas border border-[rgb(var(--color-border-subtle))] text-center"
+            >
+              <stat.icon className="w-5 h-5 text-profit-pulse mx-auto mb-2" />
+              <p className="text-xl font-bold text-clear-signal">{stat.value}</p>
+              <p className="text-[10px] text-market-mist uppercase tracking-wide">{stat.label}</p>
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
 
+      {/* Wave Divider */}
       <div className="absolute bottom-0 left-0 right-0">
         <svg viewBox="0 0 1440 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
           <path 
@@ -179,69 +368,86 @@ function SignalPreviewCard({ signal }: { signal: typeof demoSignals[0] }) {
   const isBuy = signal.direction === 'BUY'
   const isWin = signal.status === 'win'
 
+  const cardClass = cn(
+    "bg-chart-canvas border rounded-2xl p-6 shadow-2xl shadow-black/30",
+    isWin 
+      ? "border-[rgba(var(--color-profit-pulse),0.4)] shadow-[0_0_40px_rgba(var(--color-profit-pulse),0.15)]"
+      : "border-[rgb(var(--color-border-subtle))]"
+  )
+
+  const iconBgClass = cn(
+    "w-14 h-14 rounded-2xl flex items-center justify-center text-2xl bg-gradient-to-br",
+    isBuy 
+      ? "from-[rgba(var(--color-bull-run),0.2)] to-[rgba(var(--color-bull-run),0.05)]"
+      : "from-[rgba(var(--color-bear-strike),0.2)] to-[rgba(var(--color-bear-strike),0.05)]"
+  )
+
+  const statusClass = cn(
+    "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold",
+    isWin
+      ? "bg-[rgba(var(--color-profit-pulse),0.15)] text-profit-pulse"
+      : "bg-[rgba(var(--color-data-stream),0.15)] text-data-stream"
+  )
+
   return (
-    <motion.div
-      key={signal.asset}
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: MOTION.smooth / 1000 }}
-      className={cn(
-        "bg-chart-canvas border rounded-2xl p-6 shadow-2xl",
-        isWin 
-          ? "border-[rgb(var(--color-profit-pulse))] glow-profit"
-          : "border-[rgb(var(--color-border-subtle))]"
-      )}
-    >
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className={cn(
-            "w-12 h-12 rounded-xl flex items-center justify-center",
-            isBuy 
-              ? "bg-[rgba(var(--color-bull-run),0.15)]"
-              : "bg-[rgba(var(--color-bear-strike),0.15)]"
-          )}>
-            {isBuy ? (
-              <ArrowUpRight className="w-6 h-6 text-bull-run" />
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={signal.asset}
+        initial={{ opacity: 0, scale: 0.95, y: 10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: -10 }}
+        transition={{ duration: 0.4 }}
+        className={cardClass}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <motion.div whileHover={{ scale: 1.05 }} className={iconBgClass}>
+              {signal.flag}
+            </motion.div>
+            <div>
+              <h3 className="text-xl font-bold text-clear-signal">{signal.asset}</h3>
+              <div className="flex items-center gap-1.5">
+                {isBuy ? (
+                  <ArrowUpRight className="w-4 h-4 text-bull-run" />
+                ) : (
+                  <ArrowDownRight className="w-4 h-4 text-bear-strike" />
+                )}
+                <span className={isBuy ? "text-sm font-semibold text-bull-run" : "text-sm font-semibold text-bear-strike"}>
+                  {signal.direction}
+                </span>
+              </div>
+            </div>
+          </div>
+          
+          <div className={statusClass}>
+            {isWin ? (
+              <CheckCircle2 className="w-4 h-4" />
             ) : (
-              <ArrowDownRight className="w-6 h-6 text-bear-strike" />
+              <span className="w-2 h-2 rounded-full bg-current animate-pulse" />
             )}
-          </div>
-          <div>
-            <h3 className="text-xl font-bold text-clear-signal">{signal.asset}</h3>
-            <span className={cn(
-              "text-sm font-medium",
-              isBuy ? "text-bull-run" : "text-bear-strike"
-            )}>
-              {signal.direction} Signal
-            </span>
+            {isWin ? 'TP Hit' : 'Active'}
           </div>
         </div>
-        
-        <div className={cn(
-          "px-3 py-1.5 rounded-full text-sm font-medium",
-          isWin
-            ? "bg-[rgba(var(--color-profit-pulse),0.15)] text-profit-pulse"
-            : "bg-[rgba(var(--color-data-stream),0.15)] text-data-stream"
-        )}>
-          {isWin ? '✓ TP Hit' : 'Active'}
-        </div>
-      </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        <div className="bg-panel-edge rounded-xl p-4">
-          <p className="text-xs text-market-mist mb-1">Entry Price</p>
-          <p className="text-xl font-bold text-clear-signal font-mono">{signal.entry}</p>
+        {/* Price Grid */}
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          <div className="bg-panel-edge rounded-xl p-4">
+            <p className="text-xs text-market-mist mb-1">Entry Price</p>
+            <p className="text-xl font-bold text-clear-signal font-mono">{signal.entry}</p>
+          </div>
+          <div className="bg-[rgba(var(--color-profit-pulse),0.1)] rounded-xl p-4 border border-[rgba(var(--color-profit-pulse),0.2)]">
+            <p className="text-xs text-profit-pulse mb-1">Take Profit</p>
+            <p className="text-xl font-bold text-profit-pulse font-mono">{signal.tp}</p>
+          </div>
         </div>
-        <div className="bg-panel-edge rounded-xl p-4">
-          <p className="text-xs text-market-mist mb-1">Take Profit</p>
-          <p className="text-xl font-bold text-profit-pulse font-mono">{signal.tp}</p>
-        </div>
-      </div>
 
-      <div className="flex items-center justify-between py-4 border-t border-[rgb(var(--color-border-subtle))]">
-        <span className="text-market-mist">Risk : Reward</span>
-        <span className="text-lg font-bold text-golden-edge">1 : 3</span>
-      </div>
-    </motion.div>
+        {/* Risk Reward */}
+        <div className="flex items-center justify-between py-4 px-4 rounded-xl bg-[rgba(var(--color-golden-edge),0.05)] border border-[rgba(var(--color-golden-edge),0.15)]">
+          <span className="text-market-mist font-medium">Risk : Reward</span>
+          <span className="text-xl font-bold text-golden-edge">1 : 3</span>
+        </div>
+      </motion.div>
+    </AnimatePresence>
   )
 }
