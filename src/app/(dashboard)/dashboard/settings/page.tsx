@@ -7,14 +7,11 @@ import {
   Bell, 
   Shield, 
   CreditCard,
-  Moon,
-  Sun,
   Smartphone,
   Mail,
   MessageSquare,
   LogOut,
   ChevronRight,
-  Check,
   Crown,
   Zap
 } from 'lucide-react'
@@ -41,57 +38,7 @@ export default function SettingsPage() {
   }
 
   const firstName = profile?.full_name?.split(' ')[0] || 'Trader'
-  const tier = profile?.tier || 'FREE'
-
-  const settingsSections = [
-    {
-      title: 'Account',
-      items: [
-        {
-          icon: User,
-          label: 'Profile Information',
-          description: 'Update your name and email',
-          action: 'edit',
-        },
-        {
-          icon: Shield,
-          label: 'Password & Security',
-          description: 'Change password, enable 2FA',
-          action: 'edit',
-        },
-      ]
-    },
-    {
-      title: 'Notifications',
-      items: [
-        {
-          icon: Mail,
-          label: 'Email Notifications',
-          description: 'Signal alerts via email',
-          toggle: true,
-          enabled: notifications.email,
-          onToggle: () => setNotifications(n => ({ ...n, email: !n.email })),
-        },
-        {
-          icon: Smartphone,
-          label: 'Push Notifications',
-          description: 'Browser push alerts',
-          toggle: true,
-          enabled: notifications.push,
-          onToggle: () => setNotifications(n => ({ ...n, push: !n.push })),
-        },
-        {
-          icon: MessageSquare,
-          label: 'Telegram Alerts',
-          description: tier === 'FREE' ? 'Upgrade to Pro for Telegram' : 'Instant Telegram alerts',
-          toggle: tier !== 'FREE',
-          enabled: notifications.telegram,
-          onToggle: () => setNotifications(n => ({ ...n, telegram: !n.telegram })),
-          locked: tier === 'FREE',
-        },
-      ]
-    },
-  ]
+  const tier = profile?.subscription_tier || 'FREE'
 
   return (
     <div className="space-y-6 max-w-2xl">
@@ -162,61 +109,141 @@ export default function SettingsPage() {
         </motion.div>
       )}
 
-      {/* Settings Sections */}
-      {settingsSections.map((section, sectionIndex) => (
-        <motion.div
-          key={section.title}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 + sectionIndex * 0.1 }}
-        >
-          <h3 className="text-xs font-bold text-distant-data uppercase tracking-wide mb-3 px-1">
-            {section.title}
-          </h3>
-          <div className="rounded-2xl bg-chart-canvas border border-[rgb(var(--color-border-subtle))] overflow-hidden divide-y divide-[rgb(var(--color-border-subtle))]">
-            {section.items.map((item, index) => (
-              <div
-                key={item.label}
-                className={cn(
-                  "flex items-center justify-between p-4 hover:bg-panel-edge/50 transition-all",
-                  item.locked && "opacity-60"
-                )}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-panel-edge flex items-center justify-center">
-                    <item.icon className="w-5 h-5 text-market-mist" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-clear-signal text-sm">{item.label}</p>
-                    <p className="text-xs text-market-mist">{item.description}</p>
-                  </div>
-                </div>
-                
-                {item.toggle ? (
-                  <button
-                    onClick={item.onToggle}
-                    disabled={item.locked}
-                    className={cn(
-                      "w-12 h-7 rounded-full transition-all relative",
-                      item.enabled ? "bg-profit-pulse" : "bg-panel-edge"
-                    )}
-                  >
-                    <motion.div
-                      animate={{ x: item.enabled ? 22 : 2 }}
-                      transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                      className="w-5 h-5 rounded-full bg-white shadow-md absolute top-1"
-                    />
-                  </button>
-                ) : (
-                  <ChevronRight className="w-5 h-5 text-distant-data" />
-                )}
+      {/* Account Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+      >
+        <h3 className="text-xs font-bold text-distant-data uppercase tracking-wide mb-3 px-1">
+          Account
+        </h3>
+        <div className="rounded-2xl bg-chart-canvas border border-[rgb(var(--color-border-subtle))] overflow-hidden divide-y divide-[rgb(var(--color-border-subtle))]">
+          <div className="flex items-center justify-between p-4 hover:bg-panel-edge/50 transition-all">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-panel-edge flex items-center justify-center">
+                <User className="w-5 h-5 text-market-mist" />
               </div>
-            ))}
+              <div>
+                <p className="font-medium text-clear-signal text-sm">Profile Information</p>
+                <p className="text-xs text-market-mist">Update your name and email</p>
+              </div>
+            </div>
+            <ChevronRight className="w-5 h-5 text-distant-data" />
           </div>
-        </motion.div>
-      ))}
+          <div className="flex items-center justify-between p-4 hover:bg-panel-edge/50 transition-all">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-panel-edge flex items-center justify-center">
+                <Shield className="w-5 h-5 text-market-mist" />
+              </div>
+              <div>
+                <p className="font-medium text-clear-signal text-sm">Password & Security</p>
+                <p className="text-xs text-market-mist">Change password, enable 2FA</p>
+              </div>
+            </div>
+            <ChevronRight className="w-5 h-5 text-distant-data" />
+          </div>
+        </div>
+      </motion.div>
 
-      {/* Subscription Card */}
+      {/* Notifications Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+      >
+        <h3 className="text-xs font-bold text-distant-data uppercase tracking-wide mb-3 px-1">
+          Notifications
+        </h3>
+        <div className="rounded-2xl bg-chart-canvas border border-[rgb(var(--color-border-subtle))] overflow-hidden divide-y divide-[rgb(var(--color-border-subtle))]">
+          {/* Email Toggle */}
+          <div className="flex items-center justify-between p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-panel-edge flex items-center justify-center">
+                <Mail className="w-5 h-5 text-market-mist" />
+              </div>
+              <div>
+                <p className="font-medium text-clear-signal text-sm">Email Notifications</p>
+                <p className="text-xs text-market-mist">Signal alerts via email</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setNotifications(n => ({ ...n, email: !n.email }))}
+              className={cn(
+                "w-12 h-7 rounded-full transition-all relative",
+                notifications.email ? "bg-profit-pulse" : "bg-panel-edge"
+              )}
+            >
+              <motion.div
+                animate={{ x: notifications.email ? 22 : 2 }}
+                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                className="w-5 h-5 rounded-full bg-white shadow-md absolute top-1"
+              />
+            </button>
+          </div>
+
+          {/* Push Toggle */}
+          <div className="flex items-center justify-between p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-panel-edge flex items-center justify-center">
+                <Smartphone className="w-5 h-5 text-market-mist" />
+              </div>
+              <div>
+                <p className="font-medium text-clear-signal text-sm">Push Notifications</p>
+                <p className="text-xs text-market-mist">Browser push alerts</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setNotifications(n => ({ ...n, push: !n.push }))}
+              className={cn(
+                "w-12 h-7 rounded-full transition-all relative",
+                notifications.push ? "bg-profit-pulse" : "bg-panel-edge"
+              )}
+            >
+              <motion.div
+                animate={{ x: notifications.push ? 22 : 2 }}
+                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                className="w-5 h-5 rounded-full bg-white shadow-md absolute top-1"
+              />
+            </button>
+          </div>
+
+          {/* Telegram Toggle */}
+          <div className={cn(
+            "flex items-center justify-between p-4",
+            tier === 'FREE' && "opacity-60"
+          )}>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-panel-edge flex items-center justify-center">
+                <MessageSquare className="w-5 h-5 text-market-mist" />
+              </div>
+              <div>
+                <p className="font-medium text-clear-signal text-sm">Telegram Alerts</p>
+                <p className="text-xs text-market-mist">
+                  {tier === 'FREE' ? 'Upgrade to Pro for Telegram' : 'Instant Telegram alerts'}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => tier !== 'FREE' && setNotifications(n => ({ ...n, telegram: !n.telegram }))}
+              disabled={tier === 'FREE'}
+              className={cn(
+                "w-12 h-7 rounded-full transition-all relative",
+                notifications.telegram ? "bg-profit-pulse" : "bg-panel-edge",
+                tier === 'FREE' && "cursor-not-allowed"
+              )}
+            >
+              <motion.div
+                animate={{ x: notifications.telegram ? 22 : 2 }}
+                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                className="w-5 h-5 rounded-full bg-white shadow-md absolute top-1"
+              />
+            </button>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Subscription Section */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -226,7 +253,7 @@ export default function SettingsPage() {
           Subscription
         </h3>
         <div className="rounded-2xl bg-chart-canvas border border-[rgb(var(--color-border-subtle))] overflow-hidden">
-          <div className="flex items-center justify-between p-4">
+          <div className="flex items-center justify-between p-4 hover:bg-panel-edge/50 transition-all">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-panel-edge flex items-center justify-center">
                 <CreditCard className="w-5 h-5 text-market-mist" />

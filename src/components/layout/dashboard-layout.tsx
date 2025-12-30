@@ -20,15 +20,14 @@ export function DashboardLayout({ children, user, isAdmin = false }: DashboardLa
 
   return (
     <div className="min-h-screen bg-market-depth flex">
-      <Sidebar 
+      <Sidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
-        isAdmin={isAdmin}
         subscriptionTier={user?.subscription_tier}
       />
 
       <div className="flex-1 flex flex-col min-h-screen">
-        <Header 
+        <Header
           user={user}
           onMenuToggle={() => setIsSidebarOpen(!isSidebarOpen)}
           isSidebarOpen={isSidebarOpen}
@@ -42,9 +41,9 @@ export function DashboardLayout({ children, user, isAdmin = false }: DashboardLa
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-distant-data">
             <p>© 2025 Quant Flow Trading. All rights reserved.</p>
             <div className="flex items-center gap-4">
-              <a href="#" className="hover:text-market-mist transition-swift">Terms</a>
-              <a href="#" className="hover:text-market-mist transition-swift">Privacy</a>
-              <a href="#" className="hover:text-market-mist transition-swift">Support</a>
+              <a href="/terms" className="hover:text-market-mist transition-swift">Terms</a>
+              <a href="/privacy" className="hover:text-market-mist transition-swift">Privacy</a>
+              <a href="/contact" className="hover:text-market-mist transition-swift">Support</a>
             </div>
           </div>
         </footer>

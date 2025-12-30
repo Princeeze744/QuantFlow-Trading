@@ -95,7 +95,7 @@ const quickTips = [
 
 export default function AcademyPage() {
   const { profile } = useUser()
-  const tier = profile?.tier || 'FREE'
+  const tier = profile?.subscription_tier || 'FREE'
   const hasProAccess = tier !== 'FREE'
 
   const completedCourses = courses.filter(c => c.progress === 100).length

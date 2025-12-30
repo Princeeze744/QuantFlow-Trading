@@ -8,6 +8,12 @@ interface Profile {
   id: string
   full_name: string | null
   avatar_url: string | null
+  email?: string
+  subscription_tier?: 'FREE' | 'BASIC' | 'PRO' | 'VIP'
+  subscription_status?: 'ACTIVE' | 'CANCELLED' | 'EXPIRED' | 'PAST_DUE'
+  subscription_expires_at?: string | null
+  created_at?: string
+  updated_at?: string
 }
 
 export function useUser() {
@@ -47,6 +53,7 @@ export function useUser() {
 
         // Check admin status
         const { data: adminCheck, error: adminError } = await supabase.rpc('is_admin')
+        
         console.log('🔍 Admin Check Result:', adminCheck)
         
         if (adminError) {

@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
-  Filter, 
   Zap, 
   TrendingUp, 
   TrendingDown,
@@ -140,7 +139,7 @@ export default function SignalsPage() {
                 transition={{ delay: index * 0.05 }}
               >
                 <FullSignalCard
-                  signal={signal}
+                  signal={signal as any}
                   isAdmin={isAdmin}
                   onDelete={() => {}}
                 />
