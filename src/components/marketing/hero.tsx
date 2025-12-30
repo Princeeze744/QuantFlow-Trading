@@ -24,9 +24,9 @@ const demoSignals = [
 ]
 
 const stats = [
-  { value: '78.5%', label: 'Win Rate', icon: TrendingUp, color: 'profit-pulse' },
-  { value: '2.5K+', label: 'Traders', icon: Shield, color: 'data-stream' },
-  { value: '24/7', label: 'Support', icon: Clock, color: 'golden-edge' },
+  { value: '94%', label: 'Win Rate', icon: TrendingUp },
+  { value: '2.5K+', label: 'Traders', icon: Shield },
+  { value: '24/7', label: 'Support', icon: Clock },
 ]
 
 export function Hero() {
@@ -78,7 +78,7 @@ export function Hero() {
             opacity: [0.1, 0.15, 0.1]
           }}
           transition={{ duration: 8, repeat: Infinity }}
-          className="absolute top-1/4 -left-1/4 w-[300px] lg:w-[600px] h-[300px] lg:h-[600px] bg-[rgb(var(--color-profit-pulse))] rounded-full blur-[100px] lg:blur-[150px]"
+          className="absolute top-1/4 -left-1/4 w-[600px] h-[600px] bg-[rgb(var(--color-profit-pulse))] rounded-full blur-[150px]"
         />
         <motion.div
           animate={{
@@ -86,7 +86,7 @@ export function Hero() {
             opacity: [0.08, 0.12, 0.08]
           }}
           transition={{ duration: 10, repeat: Infinity }}
-          className="absolute bottom-1/4 -right-1/4 w-[250px] lg:w-[500px] h-[250px] lg:h-[500px] bg-[rgb(var(--color-data-stream))] rounded-full blur-[100px] lg:blur-[150px]"
+          className="absolute bottom-1/4 -right-1/4 w-[500px] h-[500px] bg-[rgb(var(--color-data-stream))] rounded-full blur-[150px]"
         />
         <motion.div
           animate={{
@@ -94,12 +94,12 @@ export function Hero() {
             opacity: [0.05, 0.08, 0.05]
           }}
           transition={{ duration: 12, repeat: Infinity }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] lg:w-[400px] h-[200px] lg:h-[400px] bg-[rgb(var(--color-golden-edge))] rounded-full blur-[100px] lg:blur-[150px]"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[rgb(var(--color-golden-edge))] rounded-full blur-[150px]"
         />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-20">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left Column - Content */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -161,7 +161,7 @@ export function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.25 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8"
+              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-10"
             >
               <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Link href="/register" className={primaryBtnClass}>
@@ -179,12 +179,12 @@ export function Hero() {
               </motion.div>
             </motion.div>
 
-            {/* Trust Indicators - Desktop Only */}
+            {/* Trust Indicators */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.35 }}
-              className="hidden lg:flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-3"
+              className="flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-3"
             >
               <motion.div
                 initial={{ opacity: 0, x: -10 }}
@@ -216,7 +216,7 @@ export function Hero() {
             </motion.div>
           </motion.div>
 
-          {/* Right Column - Desktop Signal Card + Floating Stats */}
+          {/* Right Column - Signal Card + Floating Stats */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
@@ -328,64 +328,26 @@ export function Hero() {
           </motion.div>
         </div>
 
-        {/* ===== MOBILE SIGNAL CARD ===== */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="lg:hidden mt-8"
-        >
-          <div className="relative">
-            <MobileSignalCard signal={signal} />
-            
-            {/* Signal Indicator Dots - Mobile */}
-            <div className="flex justify-center gap-2 mt-4">
-              {demoSignals.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentSignal(index)}
-                  className={cn(
-                    "h-2 rounded-full transition-all duration-300",
-                    index === currentSignal
-                      ? "bg-profit-pulse w-6"
-                      : "bg-panel-edge w-2"
-                  )}
-                />
-              ))}
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Mobile Floating Stats */}
+        {/* Mobile Stats Bar */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="lg:hidden mt-6"
+          className="lg:hidden mt-12 grid grid-cols-3 gap-3"
         >
-          <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
-            {[
-              { value: '78.5%', label: 'Win Rate', icon: TrendingUp, color: 'profit-pulse' },
-              { value: '+2,450', label: 'Pips/Month', icon: Zap, color: 'golden-edge' },
-              { value: '2,547', label: 'Traders', icon: Shield, color: 'data-stream' },
-            ].map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.5 + index * 0.1 }}
-                className="flex-shrink-0 flex items-center gap-3 p-3 rounded-xl bg-chart-canvas border border-[rgb(var(--color-border-subtle))]"
-              >
-                <div className={`w-10 h-10 rounded-lg bg-${stat.color}/15 flex items-center justify-center`}>
-                  <stat.icon className={`w-5 h-5 text-${stat.color}`} />
-                </div>
-                <div>
-                  <p className={`text-lg font-bold text-${stat.color}`}>{stat.value}</p>
-                  <p className="text-[10px] text-market-mist">{stat.label}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+          {stats.map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 + index * 0.1 }}
+              className="p-4 rounded-2xl bg-chart-canvas border border-[rgb(var(--color-border-subtle))] text-center"
+            >
+              <stat.icon className="w-5 h-5 text-profit-pulse mx-auto mb-2" />
+              <p className="text-xl font-bold text-clear-signal">{stat.value}</p>
+              <p className="text-[10px] text-market-mist uppercase tracking-wide">{stat.label}</p>
+            </motion.div>
+          ))}
         </motion.div>
       </div>
 
@@ -402,7 +364,6 @@ export function Hero() {
   )
 }
 
-// Desktop Signal Card
 function SignalPreviewCard({ signal }: { signal: typeof demoSignals[0] }) {
   const isBuy = signal.direction === 'BUY'
   const isWin = signal.status === 'win'
@@ -485,90 +446,6 @@ function SignalPreviewCard({ signal }: { signal: typeof demoSignals[0] }) {
         <div className="flex items-center justify-between py-4 px-4 rounded-xl bg-[rgba(var(--color-golden-edge),0.05)] border border-[rgba(var(--color-golden-edge),0.15)]">
           <span className="text-market-mist font-medium">Risk : Reward</span>
           <span className="text-xl font-bold text-golden-edge">1 : 3</span>
-        </div>
-      </motion.div>
-    </AnimatePresence>
-  )
-}
-
-// Mobile Signal Card - Compact & Beautiful
-function MobileSignalCard({ signal }: { signal: typeof demoSignals[0] }) {
-  const isBuy = signal.direction === 'BUY'
-  const isWin = signal.status === 'win'
-
-  return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={signal.asset}
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: -20 }}
-        transition={{ duration: 0.3 }}
-        className={cn(
-          "bg-chart-canvas border rounded-2xl p-4 shadow-xl",
-          isWin
-            ? "border-[rgba(var(--color-profit-pulse),0.4)]"
-            : "border-[rgb(var(--color-border-subtle))]"
-        )}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div className={cn(
-              "w-12 h-12 rounded-xl flex items-center justify-center text-2xl bg-gradient-to-br",
-              isBuy
-                ? "from-[rgba(var(--color-bull-run),0.2)] to-transparent"
-                : "from-[rgba(var(--color-bear-strike),0.2)] to-transparent"
-            )}>
-              {signal.flag}
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-clear-signal">{signal.asset}</h3>
-              <div className="flex items-center gap-1">
-                {isBuy ? (
-                  <ArrowUpRight className="w-4 h-4 text-bull-run" />
-                ) : (
-                  <ArrowDownRight className="w-4 h-4 text-bear-strike" />
-                )}
-                <span className={cn(
-                  "text-sm font-semibold",
-                  isBuy ? "text-bull-run" : "text-bear-strike"
-                )}>
-                  {signal.direction}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className={cn(
-            "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold",
-            isWin
-              ? "bg-[rgba(var(--color-profit-pulse),0.15)] text-profit-pulse"
-              : "bg-[rgba(var(--color-data-stream),0.15)] text-data-stream"
-          )}>
-            {isWin ? (
-              <CheckCircle2 className="w-3.5 h-3.5" />
-            ) : (
-              <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
-            )}
-            {isWin ? 'TP Hit' : 'Active'}
-          </div>
-        </div>
-
-        {/* Price Row */}
-        <div className="flex gap-2">
-          <div className="flex-1 bg-panel-edge rounded-xl p-3">
-            <p className="text-[10px] text-market-mist mb-0.5">Entry</p>
-            <p className="text-lg font-bold text-clear-signal font-mono">{signal.entry}</p>
-          </div>
-          <div className="flex-1 bg-[rgba(var(--color-profit-pulse),0.1)] rounded-xl p-3 border border-[rgba(var(--color-profit-pulse),0.2)]">
-            <p className="text-[10px] text-profit-pulse mb-0.5">Take Profit</p>
-            <p className="text-lg font-bold text-profit-pulse font-mono">{signal.tp}</p>
-          </div>
-          <div className="w-20 bg-[rgba(var(--color-golden-edge),0.1)] rounded-xl p-3 border border-[rgba(var(--color-golden-edge),0.2)] flex flex-col items-center justify-center">
-            <p className="text-[10px] text-golden-edge mb-0.5">R:R</p>
-            <p className="text-lg font-bold text-golden-edge">1:3</p>
-          </div>
         </div>
       </motion.div>
     </AnimatePresence>
