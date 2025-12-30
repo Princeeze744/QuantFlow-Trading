@@ -1,11 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
+import { isAdmin } from '@/lib/auth/admin'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
 
 export async function POST(request: NextRequest) {
+  // ✅ SECURITY: Admin only
+  const adminCheck = await isAdmin()
+  if (!adminCheck) {
+    return NextResponse.json(
+      { error: 'Unauthorized: Admin access required' }, 
+      { status: 403 }
+    )
+  }
+
   try {
     const { analysis } = await request.json()
 
